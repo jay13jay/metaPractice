@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jay13jay/metaPractice/fib"
 )
@@ -19,7 +20,13 @@ func main() {
 	// res := cafeteria.GetMaxAdditionalDinersCount(N, K, M, S)
 
 	// fmt.Printf("There are %d seats available\n", res)
-	n := 10
-	res := fib.CalcFib(n)
-	fmt.Printf("Fibonacci of %d is %d\n", n, res)
+	
+	// n := 20
+	for n := 10; n <= 1000000; n = n + n {
+		start := time.Now()
+		res := fib.CalcFib(n)
+		end := time.Now()
+		timeDiff := end.Sub(start)
+		fmt.Printf("%d\t%v\t%v\n", n, timeDiff, fib.FormatScientific(res))
+	}
 }
