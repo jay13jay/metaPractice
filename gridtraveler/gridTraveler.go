@@ -11,6 +11,9 @@ func UniquePaths(m int, n int) int {
 	if val, ok := hashMap[[2]int{m, n}]; ok {
 		return val // Return stored result
 	}
+	if val, ok := hashMap[[2]int{n, m}]; { //
+		return val 
+	}
 	if m == 1 || n == 1 {
 		hashMap[[2]int{m,n}] = 1
 		return 1
