@@ -11,7 +11,7 @@ func UniquePaths(m int, n int) int {
 	if val, ok := hashMap[[2]int{m, n}]; ok {
 		return val // Return stored result
 	}
-	if val, ok := hashMap[[2]int{n, m}]; { // Check the reverse order too
+	if val, ok := hashMap[[2]int{n, m}]; ok { // Check the reverse order too
 		return val 
 	}
 	if m == 1 || n == 1 {
