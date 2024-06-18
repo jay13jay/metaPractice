@@ -10,9 +10,7 @@ func main() {
 	// ret := combosum.ComboSum([]int{2, 3, 6, 7}, 7)
 	// ret := combosum.ComboSum([]int{2, 3, 5}, 0)
 	arr := []int{5,70,11,11,26,28,83,34,35,14,19,22}
-	res, err := mergesort.MS(arr)
-	if err != nil {
-		fmt.Println(err)
-	}
+	res := mergesort.MS(arr)
+
 	fmt.Printf("\nResults:\n%v\n", res)
 }
