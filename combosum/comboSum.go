@@ -1,7 +1,5 @@
 package combosum
 
-import "fmt"
-
 func ComboSum(candidates []int, target int) [][]int { 
 	return combinationSum(candidates, target)
 }
@@ -15,37 +13,22 @@ var cMap = make(map[int]bool)
 // target = 7
 func combinationSum(candidates []int, target int) [][]int {
 	ret := [][]int{}
-	for i := 0; i < len(candidates); i++ {
-		var tempSum int = 0
-		tempSum += candidates[i]
-		tempRet := []int{candidates[i]}
-		comp := target - tempSum
-		// fmt.Printf("MAIN tempSum: %d\ttempRet: %v\tcomp: %d\n", tempSum, tempRet, comp)
-
-		for comp > 0 {
-			fmt.Printf("tempSum: %d\ttempRet: %v\tcomp: %d\n", tempSum, tempRet, comp)
-
-			if cMap[tempSum] {
-				fmt.Printf("cmap[tempSum] triggered\n")
-				tempRet = append(tempRet, iMap[tempSum]...)
-				ret = append(ret, tempRet)
-				fmt.Printf("ret: %v\n", ret)
-			}
-			if cMap[comp] {
-				iMap[comp] = append(iMap[comp], tempRet...)
-			}
-			// iMap[comp] = append(iMap[comp], tempRet...)
-			cMap[comp] = true
-
-			tempSum += candidates[i]
-			tempRet = append(tempRet, candidates[i])
-			comp = target - tempSum
-		}
-
-		if comp == 0 {
-			ret = append(ret, tempRet)
-		}
+	if target == 0 {
+		return ret
 	}
-	// sort.IntSlice(ret)
+	if target < 0 {
+		return nil
+	}
+
+	for i := 0; i < len(candidates); i++ {
+		c := candidates[i]
+		remain := target - c
+		res := combinationSum(candidates, remain)
+		if res != nil{
+			return ()
+		}
+		return nil
+	}
+
 	return ret
 }
