@@ -2,13 +2,12 @@ package utils
 
 import "math/rand"
 
-// Takes size as an argument
-// Returns a slice with capacity of "size".
-// Creates slice with rand.Intn(size)
+// CreateSlice takes size as an argument and returns a slice with capacity of "size"
+// filled with random integers between 0 and 99.
 func CreateSlice(size int) []int {
 	arr := make([]int, size)
 	for i := 0; i < size; i++ {
-		arr = append(arr, int(rand.Intn(size)))
+		arr[i] = rand.Intn(100)
 	}
 	return arr
 }
