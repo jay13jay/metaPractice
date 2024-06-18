@@ -1,44 +1,51 @@
 package mergesort
 
-// Merge sort 2 arrays
-// takes an integer array as input
-// returns the sorted array
-func MS(arr []int) []int {
-	if len(arr) < 2 {
-		return arr
-	}
-
-	mid := len(arr) / 2
-	left := MS(arr[:mid])
-	right := MS(arr[mid:])
-
-	ret := merge(left, right)
-	return ret
+// MergeSortInPlace sorts the given slice in-place using the merge sort algorithm.
+func MS(arr []int) {
+	mergeSortInPlaceHelper(arr, 0, len(arr)-1)
+	// fmt.Printf("MS Slice: %v ", arr)
 }
 
-func merge(left, right []int) []int {
-	// l, r are indexes for left and right array
-	// sort functions by sorting value 0 of each array,
-	// then iterating the array that had the smaller value
-	l, r := 0, 0
-	totLen := len(left) + len(right)
-	result := make([]int, totLen)
+func mergeSortInPlaceHelper(arr []int, left, right int) {
+	if left < right {
+		mid := (left + right) / 2
+		mergeSortInPlaceHelper(arr, left, mid)
+		mergeSortInPlaceHelper(arr, mid+1, right)
+		mergeInPlace(arr, left, mid, right)
+	}
+}
 
-	for i := 0; i < totLen; i++ {
-		if l >= len(left) {
-			result[i] = right[r]
-			r++
-		} else if r >= len(right) {
-			result[i] = left[l]
-			l++
-		} else if left[l] < right[r] {
-			result[i] = left[l]
-			l++
+func mergeInPlace(arr []int, left, mid, right int) {
+	// Create a temporary slice to store the merged elements
+	temp := make([]int, right-left+1)
+	i, j, k := left, mid+1, 0
+
+	// Merge the two sorted subarrays into the temporary slice
+	for i <= mid && j <= right {
+		if arr[i] <= arr[j] {
+			temp[k] = arr[i]
+			i++
 		} else {
-			result[i] = right[r]
-			r++
+			temp[k] = arr[j]
+			j++
 		}
+		k++
 	}
 
-	return result
+	// Copy the remaining elements from the left subarray, if any
+	for i <= mid {
+		temp[k] = arr[i]
+		i++
+		k++
+	}
+
+	// Copy the remaining elements from the right subarray, if any
+	for j <= right {
+		temp[k] = arr[j]
+		j++
+		k++
+	}
+
+	// Copy the merged elements back to the original array
+	copy(arr[left:], temp)
 }

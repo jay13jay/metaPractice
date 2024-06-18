@@ -1,27 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"math/rand"
-	"time"
-
 	"github.com/jay13jay/metaPractice/mergesort"
+	"github.com/jay13jay/metaPractice/quicksort"
+
+	"github.com/jay13jay/metaPractice/utils"
 )
 
-var size int = 10000000
+var size int = 10000
+var size2 int = 20000
 func main() {
-	// ret := combosum.ComboSum([]int{2, 3, 6, 7}, 7)
-	// ret := combosum.ComboSum([]int{2, 3, 5}, 0)
-	arr := make([]int, size)
-	for i := 0; i < size; i++ {
-		arr = append(arr, int(rand.Intn(size)))
-	}
-	for t := 0; t < 5; t++ {
-		start := time.Now()
-		_ = mergesort.MS(arr)
-		end := time.Now()
-		tDiff := end.Sub(start)
-		fmt.Printf("Arr size: %d, Time: %s\n", size, tDiff)
-		size *= 2
-	}
+	// var arr = []int{10,7,8,9,1,5}
+	// fmt.Println("QS:")
+	utils.BruteFunc(quicksort.QuickSort, mergesort.MS, size)
 }
