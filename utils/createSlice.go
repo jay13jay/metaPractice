@@ -7,7 +7,7 @@ import "math/rand"
 func CreateSlice(size int) []int {
 	arr := make([]int, size)
 	for i := 0; i < size; i++ {
-		arr[i] = rand.Intn(100)
+		arr[i] = rand.Intn(10000000)
 	}
 	return arr
 }
