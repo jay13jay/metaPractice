@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 
-	"github.com/jay13jay/metaPractice/uniformintegers"
+	"github.com/jay13jay/metaPractice/hops"
 )
 
 func main() {
-	var a int64 = 234
-	var b int64 = 10556
-	ret := uniformintegers.GetUniforms(a, b)
+	var N int64 = 6
+	var F int32 = 3
+	P := []int64{5, 2, 4}
+	
+	ret := hops.SolveHops(N, F, P)
 	fmt.Println(ret)
-
 }
