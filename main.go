@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/jay13jay/metaPractice/mergesort"
-	"github.com/jay13jay/metaPractice/quicksort"
-	"github.com/jay13jay/metaPractice/utils"
+	"fmt"
+
+	"github.com/jay13jay/metaPractice/rotarylock"
 )
 
-var size int = 100000
 func main() {
-	// var arr = []int{10,7,8,9,1,5}
-	// fmt.Println("QS:")
-	utils.BruteFunc(quicksort.QuickSort, mergesort.MS, size)
-	// utils.BruteFunc(mergesort.MS, mergesort.MS, size)
-	// utils.BruteFunc(quicksort.QuickSort, quicksort.QuickSort, size)
+	N := int32(10)
+	M := int32(4)
+	C :=[]int32{9, 4, 4, 8}
+
+	time := rotarylock.Solve(N, M, C)
+	fmt.Println(time)
 }
