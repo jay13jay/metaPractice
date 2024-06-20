@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/jay13jay/metaPractice/scoreboard"
+	"github.com/jay13jay/metaPractice/uniformintegers"
 )
 
 func main() {
-	N := int32(6)
-	var S = []int32{1, 2, 3, 4, 5, 6}
+	var a int64 = 234
+	var b int64 = 10556
+	ret := uniformintegers.GetUniforms(a, b)
+	fmt.Println(ret)
 
-
-	scores := scoreboard.Solve(N, S)	
-	fmt.Println(scores)
 }
