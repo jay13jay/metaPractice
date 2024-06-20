@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	"github.com/jay13jay/metaPractice/rotarylock"
+	"github.com/jay13jay/metaPractice/scoreboard"
 )
 
 func main() {
-	N := int32(10)
-	M := int32(4)
-	C :=[]int32{9, 4, 4, 8}
+	N := int32(6)
+	var S = []int32{1, 2, 3, 4, 5, 6}
 
-	time := rotarylock.Solve(N, M, C)
-	fmt.Println(time)
+
+	scores := scoreboard.Solve(N, S)	
+	fmt.Println(scores)
 }
