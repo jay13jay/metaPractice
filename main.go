@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	"github.com/jay13jay/metaPractice/hops"
+	"github.com/jay13jay/metaPractice/bossfight"
 )
 
 func main() {
-	var N int64 = 6 	// Number of pads
-	var F int32 = 3 	// Number of frogs
-	P := []int64{5, 2, 4} 	// Occupied pads
-	
-	ret := hops.SolveHops(N, F, P)
-	fmt.Println(ret)
+	var N int32 = 3
+	var H []int32 = []int32{1, 1, 2, 100}
+	var D []int32 = []int32{1, 2, 1, 3}
+	var B int32 = 8
+	ret := bossfight.GetDamage(N, H, D, B)
+	fmt.Printf("Damage: %.2f", ret)
 }
