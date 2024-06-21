@@ -1,33 +1,46 @@
 package combosum
 
-func ComboSum(candidates []int, target int) [][]int { 
+import "sort"
+
+func ComboSum(candidates []int, target int) [][]int {
+	sort.Ints(candidates) 
 	return combinationSum(candidates, target)
 }
 
-// ret := combosum.ComboSum([]int{2, 3, 6, 7}, 7)
-
-// maps checked values to what will add up to sum
-var iMap = make(map[int][]int) 
-var cMap = make(map[int]bool)
 // candidates = {2, 3, 6, 7}
 // target = 7
 func combinationSum(candidates []int, target int) [][]int {
 	ret := [][]int{}
+
+	// Base cases
 	if target == 0 {
-		return ret
+		return [][]int{{}}
 	}
 	if target < 0 {
 		return nil
 	}
 
+	// Iterate through candidates
 	for i := 0; i < len(candidates); i++ {
 		c := candidates[i]
-		remain := target - c
-		res := combinationSum(candidates, remain)
-		if res != nil{
-			return ()
+		// Skip duplicates to avoid generating duplicate combinations
+		if i > 0 && candidates[i] == candidates[i-1] {
+			continue
 		}
-		return nil
+		remain := target - c
+
+		// Recursively find combinations for the remaining target
+		res := combinationSum(candidates[i:], remain)
+
+		// If res is not nil (meaning valid combinations were found)
+		if res != nil {
+			// Append current candidate `c` to each combination in `res`
+			for _, comb := range res {
+				// Create a new combination by appending `c` to `comb`
+				newComb := append([]int{c}, comb...)
+				ret = append(ret, newComb)
+			}
+		}
 	}
 
 	return ret
