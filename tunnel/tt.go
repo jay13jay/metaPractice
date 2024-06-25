@@ -1,7 +1,6 @@
 package tunnel
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -14,7 +13,6 @@ import (
 */
 func getSecondsElapsed(C int64, N int32, A []int64, B []int64, K int64) int64 {
   // Write your code here
-	var time int64
 	sort.Slice(A, func(i, j int) bool {
 		return A[i] < A[j]
 	})
@@ -22,27 +20,23 @@ func getSecondsElapsed(C int64, N int32, A []int64, B []int64, K int64) int64 {
 		return B[i] < B[j]
 	})
 
-	for i := 0; i < int(K); i++ {
-		fmt.Println("i=", i)
-		if K <= 0 {
-			return time
-		}
-		if B[i] - A[i] >= K {
-			fmt.Printf("T > K | Current time: %d \t New time: %d\n", time, time + A[i] + K)
-			time +=A[i] + K
-			return time
-		} else {
-			fmt.Printf("ELSE | Current K: %d \t New K: %d\n", K, K - (B[i] - A[i]))
-			K -= B[i] - A[i]
-			if i == len(B) - 1 {
-				i = -1
-				fmt.Printf("ELSE | Current time: %d \t New time: %d\n", time, time + C)
-				time += C
-			}
-		}
+	var tunnelTime int64
+	for i := 0; i < int(N); i++ {
+		tunnelTime += B[i] - A[i]
+	}
+	laps := K / tunnelTime
+	remain := K % tunnelTime
+
+	if remain == 0 {
+		return C * laps - (C - B[N-1])
 	}
 
-	return time
+	i := 0
+	for remain > 0 {
+		remain -= B[i] - A[i]
+		i++
+	}
+	return C * laps + B[i - 1] + remain
 }
 
 func Solve(C int64, N int32, A []int64, B []int64, K int64) int64 {
