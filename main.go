@@ -2,33 +2,33 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/jay13jay/metaPractice/linkedlist"
 )
 
+const listSize = 1000
 func main() {
-	list := &linkedlist.List{}
+	l1 := &linkedlist.List{}
+	l2 := &linkedlist.List{}
+	l3 := &linkedlist.List{}
 
 	for i := 0; i < 10; i++ {
-		list.Append(i)
+		insert := rand.Intn(listSize)
+		l1.Append(insert)
+		insert = rand.Intn(listSize)
+		l2.Append(insert)
 	}
-	insertNode := list.Head
-	for i := 0; i <= 4; i++ {
-		insertNode = insertNode.Next
-	}
-	list.Insert(75, insertNode)
+	fmt.Println("Pre-sorted lists:")
+	l1.Print()
+	l2.Print()
+	fmt.Println("Sorted lists:")
+	l1.Sort()
+	l2.Sort()
+	l1.Print()
+	l2.Print()
+	l3 = l1.MergeList(l2)
+	fmt.Println("Merged list:")
+	l3.Print()
 
-	list.Prepend(51)
-	list.Delete(insertNode.Next)
-	err := list.DeleteValue(100)
-	if err != nil {
-		fmt.Printf("Could not delete\nError: %v", err)
-	}
-	_ = list.DeleteValue(4)
-
-	list.Print()
-	list.Reverse()
-	list.Print()
-	list.AtoSort()
-	list.Print()
 }
