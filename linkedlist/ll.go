@@ -8,6 +8,7 @@ import (
 // Linked List struct. Contains pointer to Head, and Items, containing # of elements
 type List struct {
 	Head *Node
+	Tail *Node
 	Items int
 }
 
@@ -20,18 +21,16 @@ type Node struct {
 // Append an element to the end of the list
 func (l *List) Append(d int) {
 	node := &Node{Data: d}
-
+	current := l.Head
 	// Check if the list is empty
 	if l.Head == nil {
 		l.Head = node
 	} else {
-		current := l.Head
-		for current.Next != nil {
-			current = current.Next
-		}
+		l.Tail.Next = node
 		current.Next = node
 	}
 	l.Items++
+	l.Tail = node
 }
 
 // Add an element at the beginning of the list

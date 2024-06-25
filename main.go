@@ -29,4 +29,6 @@ func main() {
 	list.Print()
 	list.Reverse()
 	list.Print()
+	list.AtoSort()
+	list.Print()
 }
