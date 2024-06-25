@@ -86,7 +86,15 @@ func (l *List) Length() int {
 
 // Reverses the linked list
 func (l *List) Reverse() {
-
+	var prev, next *Node
+	current := l.Head
+	for current != nil {
+		next = current.Next
+		current.Next = prev
+		prev = current
+		current = next
+	}
+	l.Head = prev
 }
 
 // Returns a pointer to the first node containing provided value

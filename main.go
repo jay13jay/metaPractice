@@ -27,4 +27,6 @@ func main() {
 	_ = list.DeleteValue(4)
 
 	list.Print()
+	list.Reverse()
+	list.Print()
 }
