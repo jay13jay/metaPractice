@@ -14,20 +14,15 @@ func (list1 *List) MergeList(list2 *List) *List {
 
 	l1 := list1.Head
 	l2 := list2.Head
-	l1Items := list1.Items
-	l2Items := list2.Items
 
 	// Determine the new head of the merged list
 	if l1.Data < l2.Data {
 		newList.Head = l1
 		l1 = l1.Next
-		l1Items--
 	} else {
 		newList.Head = l2
 		l2 = l2.Next
-		l2Items--
 	}
-	newList.Items++
 	current := newList.Head
 
 	// Merge the lists
@@ -35,13 +30,10 @@ func (list1 *List) MergeList(list2 *List) *List {
 		if l1.Data < l2.Data {
 			current.Next = l1
 			l1 = l1.Next
-			l1Items--
 		} else {
 			current.Next = l2
 			l2 = l2.Next
-			l2Items--
 		}
-		newList.Items++
 		current = current.Next
 	}
 
@@ -49,11 +41,9 @@ func (list1 *List) MergeList(list2 *List) *List {
 	if l1 != nil {
 		current.Next = l1
 		newList.Tail = list1.Tail
-		newList.Items += l1Items
 	} else {
 		current.Next = l2
 		newList.Tail = list2.Tail
-		newList.Items += l2Items
 	}
 
 	// Update tail if new elements were appended
@@ -63,6 +53,7 @@ func (list1 *List) MergeList(list2 *List) *List {
 		}
 		newList.Tail = current
 	}
+	newList.Items = list1.Items + list2.Items
 
 	return newList
 }
