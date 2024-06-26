@@ -135,12 +135,14 @@ func (l *List) Reverse() {
 func (l *List) Search(d int) (*Node, error) {
 	current := l.Head
 	var err error
+
 	for current != nil && current.Data != d {
 		current = current.Next
 	}
-	if current.Data != d {
+	if current == nil {
 		err = fmt.Errorf("item not found: %d", d)
 	}
+
 	return current, err
 }
 
@@ -158,4 +160,10 @@ func (l *List) Print() {
 		current = current.Next
 	}
 	fmt.Println("nil")
+}
+
+func (l *List) Cleanup() {
+	l.Head = nil
+	l.Tail = nil
+	l.Items = 0
 }
