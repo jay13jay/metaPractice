@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/jay13jay/metaPractice/combosum"
+
+	"github.com/jay13jay/metaPractice/spiral"
 )
 
 func main() {
-	ret := combosum.ComboSum([]int{2, 3, 6, 7}, 7)
+	matrix := [][]int{{1,2,3},{4,5,6},{7,8,9}}
+	ret := spiral.Solve(matrix)
 
-	fmt.Printf("Combinations: %v\n", ret)
+	fmt.Printf("Spiraled Matrix:\n%v\n", ret)
 }

@@ -1,6 +1,6 @@
 package mergesort
 
-// MergeSortInPlace sorts the given slice in-place using the merge sort algorithm.
+// MS sorts the given slice in-place using the merge sort algorithm.
 func MS(arr []int) {
 	mergeSortInPlaceHelper(arr, 0, len(arr)-1)
 	// fmt.Printf("MS Slice: %v ", arr)
