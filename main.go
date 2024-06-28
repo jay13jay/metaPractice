@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/jay13jay/metaPractice/spiral"
+	"github.com/jay13jay/metaPractice/art"
 )
 
 func main() {
-	matrix := [][]int{{1,2,3},{4,5,6},{7,8,9}}
-	ret := spiral.Solve(matrix)
+	n := int32(9)
+	l := []int32{6, 3, 4, 5, 1, 6, 3, 3, 4}
+	d := "ULDRULURD"
 
-	fmt.Printf("Spiraled Matrix:\n%v\n", ret)
+	_ = art.Solve(n, l, d)
+
+	// fmt.Println(ret)
 }
