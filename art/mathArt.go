@@ -37,8 +37,21 @@ func newDrawing(N int32, L []int32, D string) *Drawing {
 
 }
 
+func (d *Drawing) checkIntersections() {
+	for x, xLine := range d.xLines {
+		for y, yLine := range d.yLines {
+			if x > yLine[0] && x < yLine[1] && y > xLine[0] && y < xLine[1] {
+				if (xLine[0] < y && xLine[1] > y) || (yLine[0] < x && yLine[1] > x) {
+					fmt.Printf("X: %d | yline[0]: %d | yLine[1]: %d | Y: %d | xLine[0]: %d | xLine[1]: %d\n",
+						x, yLine[0], yLine[1], y, xLine[0], xLine[1])
+					d.PlusSigns++
+				}
+			}
+		}
+	}
+}
+
 func getPlusSignCount(N int32, L []int32, D string) int64 {
-  // Write your code here
 	d := newDrawing(N, L, D)
 	d.yCheck[0] = true
 	d.xCheck[0] = true
@@ -48,13 +61,15 @@ func getPlusSignCount(N int32, L []int32, D string) int64 {
 	for i := range d.Vectors {
 		d.setNewCoord(i)
 	}
-	fmt.Printf("X: %v\nY: %v\n", d.xLines, d.yLines)
-	for i, v := range d.xLines {
-		fmt.Printf("Key: %d\tVal: %v\n", i, v)
-	}	
+	
+	// fmt.Printf("X: %v\nY: %v\n", d.xLines, d.yLines)
+	
+	d.checkIntersections()
+
+	fmt.Printf("xLines: %v\nyLines: %v\n", d.xLines, d.yLines)
+
 	return d.PlusSigns
 }
-
 func (d *Drawing) updateMaps() {
 	if ! d.xCheck[d.X] {
 		d.xCheck[d.X] = true
