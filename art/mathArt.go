@@ -1,130 +1,162 @@
 package art
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
+
+type Event struct {
+  coord       int32
+  isStart     bool
+  isHorizontal bool
+  index       int32
+}
 
 type Drawing struct {
-	Strokes int32
-	Vectors []int32
-	Directions string
-	PlusSigns int64
-	X int32
-	Y int32
-	xCheck map[int32]bool
-	yCheck map[int32]bool
-	xLines map[int32][2]int32
-	yLines map[int32][2]int32
+  Strokes    int32
+  Vectors    []int32
+  Directions string
+  PlusSigns  int64
+  X          int32
+  Y          int32
+  xKeys      []int32
+  yKeys      []int32
+  xCheck     map[int32]bool
+  yCheck     map[int32]bool
+  vertLines  map[int32][2]int32
+  horLines   map[int32][2]int32
 }
 
 func newDrawing(N int32, L []int32, D string) *Drawing {
-	return &Drawing{
-		PlusSigns: 0,
-		Strokes: N, 
-		Vectors: L, 
-		Directions: D,
-		X: 0,
-		Y: 0,
-		xCheck: make(map[int32]bool),
-		yCheck: make(map[int32]bool),
-		// map of vertical lines - key is X coord, value maps to a low Y and high Y
-		// ex. 2: [1,3] maps to [2,1] and [2,3] forming 
-		// a verical line at X coord 2, from 1 - 3
-		// xLines[x][0] = x-lowY 
-		// xLines[x][1] = x-highY
-		xLines: make(map[int32][2]int32),
-		// map of horizontal lines - key is Y coord, value maps to a low X and high X
-		yLines: make(map[int32][2]int32),
-	}
-
+  return &Drawing{
+    PlusSigns:  0,
+    Strokes:    N,
+    Vectors:    L,
+    Directions: D,
+    X:          0,
+    Y:          0,
+    xCheck:     make(map[int32]bool),
+    yCheck:     make(map[int32]bool),
+    vertLines:  make(map[int32][2]int32),
+    horLines:   make(map[int32][2]int32),
+  }
 }
 
 func (d *Drawing) checkIntersections() {
-	for x, xLine := range d.xLines {
-		for y, yLine := range d.yLines {
-			if x > yLine[0] && x < yLine[1] && y > xLine[0] && y < xLine[1] {
-				if (xLine[0] < y && xLine[1] > y) || (yLine[0] < x && yLine[1] > x) {
-					fmt.Printf("X: %d | yline[0]: %d | yLine[1]: %d | Y: %d | xLine[0]: %d | xLine[1]: %d\n",
-						x, yLine[0], yLine[1], y, xLine[0], xLine[1])
-					d.PlusSigns++
-				}
-			}
-		}
-	}
+  events := make([]Event, 0, 2*len(d.xKeys)+2*len(d.yKeys))
+
+  // Create events for horizontal lines
+  for y, line := range d.horLines {
+    events = append(events, Event{coord: line[0], isStart: true, isHorizontal: true, index: y})
+    events = append(events, Event{coord: line[1], isStart: false, isHorizontal: true, index: y})
+  }
+
+  // Create events for vertical lines
+  for x, line := range d.vertLines {
+    events = append(events, Event{coord: x, isStart: true, isHorizontal: false, index: line[0]})
+    events = append(events, Event{coord: x, isStart: false, isHorizontal: false, index: line[1]})
+  }
+
+  // Sort events by coordinate, breaking ties by isStart (start before end)
+  sort.Slice(events, func(i, j int) bool {
+    if events[i].coord == events[j].coord {
+      return events[i].isStart && !events[j].isStart
+    }
+    return events[i].coord < events[j].coord
+  })
+
+  activeIntervals := make(map[int32]int32)
+
+  // Process events
+  for _, event := range events {
+    if event.isHorizontal {
+      if event.isStart {
+        activeIntervals[event.index]++
+      } else {
+        activeIntervals[event.index]--
+        if activeIntervals[event.index] == 0 {
+          delete(activeIntervals, event.index)
+        }
+      }
+    } else {
+      if event.isStart {
+        for interval := range activeIntervals {
+          if interval > event.index && interval < d.vertLines[event.coord][1] {
+						fmt.Printf("Adding intersection. interval: %d\n", interval)
+            d.PlusSigns++
+          }
+        }
+      }
+    }
+  }
 }
 
-func getPlusSignCount(N int32, L []int32, D string) int64 {
-	d := newDrawing(N, L, D)
-	d.yCheck[0] = true
-	d.xCheck[0] = true
-	d.xLines[0] = [2]int32{0, 0}
-	d.yLines[0] = [2]int32{0, 0}
-
-	for i := range d.Vectors {
-		d.setNewCoord(i)
-	}
-	
-	// fmt.Printf("X: %v\nY: %v\n", d.xLines, d.yLines)
-	
-	d.checkIntersections()
-
-	fmt.Printf("xLines: %v\nyLines: %v\n", d.xLines, d.yLines)
-
-	return d.PlusSigns
-}
 func (d *Drawing) updateMaps() {
-	if ! d.xCheck[d.X] {
-		d.xCheck[d.X] = true
-		d.xLines[d.X] = [2]int32{d.Y, d.Y}
-	} else {
-		line := d.xLines[d.X]
-		if d.Y < d.xLines[d.X][0] {
-			line[0] = d.Y
-			d.xLines[d.X] = line
-		} else if d.Y > d.xLines[d.X][1] {
-			line[1] = d.Y
-			d.xLines[d.X] = line
-		}
-	}
-	
-	if ! d.yCheck[d.Y] {
-		d.yCheck[d.Y] = true
-		d.yLines[d.Y] = [2]int32{d.X, d.X}
-	} else {
-		line := d.yLines[d.Y]
-		if d.X < d.yLines[d.Y][0] {
-			line[0] = d.X
-			d.yLines[d.Y] = line
-		} else if d.X > d.yLines[d.Y][1] {
-			line[1] = d.X
-			d.yLines[d.Y] = line
-		}
-	}
+  if !d.xCheck[d.X] {
+    d.xCheck[d.X] = true
+    d.vertLines[d.X] = [2]int32{d.Y, d.Y}
+    d.xKeys = append(d.xKeys, d.X)
+  } else {
+    line := d.vertLines[d.X]
+    if d.Y < line[0] {
+      line[0] = d.Y
+    } else if d.Y > line[1] {
+      line[1] = d.Y
+    }
+    d.vertLines[d.X] = line
+  }
+
+  if !d.yCheck[d.Y] {
+    d.yCheck[d.Y] = true
+    d.horLines[d.Y] = [2]int32{d.X, d.X}
+    d.yKeys = append(d.yKeys, d.Y)
+  } else {
+    line := d.horLines[d.Y]
+    if d.X < line[0] {
+      line[0] = d.X
+    } else if d.X > line[1] {
+      line[1] = d.X
+    }
+    d.horLines[d.Y] = line
+  }
 }
 
 func (d *Drawing) setNewCoord(index int) {
-	dir := string(d.Directions[index])
-	vector := d.Vectors[index]
-	if dir == "U" {
-		// fmt.Printf("Moving up | current Y: %d\tNew Y: %d\n", d.Y, d.Y+vector)
-		d.Y += vector
-		d.updateMaps()
-	} else if dir == "L" {
-		// fmt.Printf("Moving left | current X: %d\tNew X: %d\n", d.X, d.X+vector)
-		d.X -= vector
-		d.updateMaps()
-	} else if dir == "R" {
-		// fmt.Printf("Moving right | current X: %d\tNew X: %d\n", d.X, d.X+vector)
-		d.X += vector
-		d.updateMaps()
-	} else if dir == "D" {
-		// fmt.Printf("Moving down | current Y: %d\tNew Y: %d\n", d.Y, d.Y+vector)
-		d.Y -= vector
-		d.updateMaps()
-	} else {
-		fmt.Println("Invalid direction")
-	}
+  dir := string(d.Directions[index])
+  vector := d.Vectors[index]
+  if dir == "U" {
+    d.Y += vector
+    d.updateMaps()
+  } else if dir == "L" {
+    d.X -= vector
+    d.updateMaps()
+  } else if dir == "R" {
+    d.X += vector
+    d.updateMaps()
+  } else if dir == "D" {
+    d.Y -= vector
+    d.updateMaps()
+  } else {
+    fmt.Println("Invalid direction")
+  }
+}
 
+func getPlusSignCount(N int32, L []int32, D string) int64 {
+  d := newDrawing(N, L, D)
+  d.yCheck[0] = true
+  d.xCheck[0] = true
+  d.xKeys = append(d.xKeys, 0)
+  d.yKeys = append(d.yKeys, 0)
+
+  for i := range d.Vectors {
+    d.setNewCoord(i)
+  }
+
+  d.checkIntersections()
+
+  return d.PlusSigns
 }
 
 func Solve(N int32, L []int32, D string) int64 {
-	return getPlusSignCount(N, L, D)
+  return getPlusSignCount(N, L, D)
 }
